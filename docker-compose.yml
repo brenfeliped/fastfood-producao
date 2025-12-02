@@ -1,36 +1,27 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:16
-    container_name: fastfood-db
+  mongo:
+    image: mongo:6
+    container_name: fastfood-producao-mongo
     restart: always
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - fastfood-db:/var/lib/postgresql/data
+      - fastfood-mongo:/data/db
     networks:
       - fastfood-net
 
   app:
     build: .
-    container_name: fastfood-app
+    container_name: fastfood-producao-app
     depends_on:
-      - db
+      - mongo
     ports:
       - "8080:8080"
       - "5005:5005"
-    command: >
-      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-           -jar app.jar
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/fastfood-producao
     networks:
       - fastfood-net
     deploy:
@@ -39,10 +30,8 @@ services:
           cpus: "1"
           memory: "512M"
 
-
 volumes:
-  fastfood-db:
+  fastfood-mongo:
 
 networks:
   fastfood-net:
-
