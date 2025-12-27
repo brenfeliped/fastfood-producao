@@ -1,24 +1,15 @@
 server:
-    servlet:
-      context-path: /fastfood
-    port: 8080
-    error:
-      include-message: always
-      include-stacktrace: always
-spring:
-  datasource:
-    url: jdbc:postgresql://db:5432/fastfood
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+  servlet:
+    context-path: /fastfood-producao
+  port: 8082
+  error:
+    include-message: always
+    include-stacktrace: always
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo-producao:27017/fastfood-producao
 
 security:
   jwt:
@@ -35,21 +26,19 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.springframework.web: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,liveness,readiness 
+        include: health,liveness,readiness
   endpoint:
     health:
-      show-details: always 
+      show-details: always
   health:
     probes:
       enabled: true
