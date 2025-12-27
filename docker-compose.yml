@@ -1,29 +1,32 @@
 version: '3.8'
 
 services:
-  mongo:
+  mongo-producao:
     image: mongo:6
     container_name: fastfood-producao-mongo
     restart: always
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
-      - fastfood-mongo:/data/db
+      - fastfood-producao-mongo:/data/db
     networks:
-      - fastfood-net
+      - fastfood-network
 
-  app:
+  app-producao:
     build: .
     container_name: fastfood-producao-app
     depends_on:
-      - mongo
+      - mongo-producao
     ports:
-      - "8080:8080"
-      - "5005:5005"
+      - "8082:8082"
+      - "5007:5005"
+    command: >
+      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+           -jar app.jar
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/fastfood-producao
+      SPRING_DATA_MONGODB_URI: mongodb://mongo-producao:27017/fastfood-producao
     networks:
-      - fastfood-net
+      - fastfood-network
     deploy:
       resources:
         limits:
@@ -31,7 +34,8 @@ services:
           memory: "512M"
 
 volumes:
-  fastfood-mongo:
+  fastfood-producao-mongo:
 
 networks:
-  fastfood-net:
+  fastfood-network:
+    external: true

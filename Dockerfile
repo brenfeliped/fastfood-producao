@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Porta HTTP e porta do debug
-EXPOSE 8080 5005
+EXPOSE 8082 5005
 
 # ENTRYPOINT com debug remoto
 ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
