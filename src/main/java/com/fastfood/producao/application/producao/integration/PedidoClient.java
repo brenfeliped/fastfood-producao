@@ -1,5 +1,6 @@
-package com.fastfood.producao.application.integration;
+package com.fastfood.producao.application.producao.integration;
 
+import com.fastfood.producao.domain.pedido.EnumStatusPedido;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -34,6 +35,29 @@ public class PedidoClient {
             throw new RuntimeException(
                     "Erro de conexão ao chamar o microserviço de pedidos (PATCH " + url + "). " +
                             "Verifique se o serviço está no ar e se PATCH está habilitado no Tomcat.",
+                    e
+            );
+        }
+    }
+
+    public void atualizarStatusPedidoParaEmPreparacao(UUID pedidoId) {
+        String url = "http://localhost:8082/fastfood-pedido/api/pedidos/" + pedidoId + "/status";
+
+        var body = new com.fastfood.producao.application.integration.dto.PedidoUpdateStatusDTO(pedidoId, EnumStatusPedido.EM_PREPARACAO);
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<com.fastfood.producao.application.integration.dto.PedidoUpdateStatusDTO> request = new HttpEntity<>(body, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
+
+        } catch (HttpStatusCodeException e) {
+            throw new RuntimeException(
+                    "Erro ao atualizar pedido para EM_PREPARACAO. " +
+                            "Status=" + e.getStatusCode() +
+                            " Body=" + e.getResponseBodyAsString(),
                     e
             );
         }

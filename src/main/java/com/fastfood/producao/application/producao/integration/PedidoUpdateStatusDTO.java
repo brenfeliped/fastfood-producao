@@ -4,5 +4,5 @@ import com.fastfood.producao.domain.pedido.EnumStatusPedido;
 import java.util.UUID;
 
 public record PedidoUpdateStatusDTO(
-        UUID id
-) {}
+        UUID id,
+        EnumStatusPedido enumStatusPedido) {}
