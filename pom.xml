@@ -112,6 +112,30 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
         </dependency>
+
+        <!-- BDD / Cucumber -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.18.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.18.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Platform Suite (para @Suite, @SelectClasspathResource etc.) -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
