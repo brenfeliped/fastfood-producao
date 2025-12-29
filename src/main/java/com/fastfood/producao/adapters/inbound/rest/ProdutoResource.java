@@ -110,36 +110,38 @@ public class ProdutoResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/categoria/{categoria}")
-    @Operation(summary = "Buscar produtos por categoria",
-            description = "Retorna todos os produtos da categoria informada.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Produtos retornados com sucesso"),
-            @ApiResponse(responseCode = "204", description = "Não tem produtos cadastrados dessa categoria"),
-            @ApiResponse(responseCode = "400", description = "Categoria inválida"),
-            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
-    })
-    public ResponseEntity<List<ProdutoDTO>> buscarPorCategoria(
-            @Parameter(description = "Nome da categoria (ex: LANCHE, ACOMPANHAMENTO, BEBIDA)",
-                    required = true)
-            @PathVariable String categoria) {
+        @GetMapping("/categoria/{categoria}")
+        @Operation(summary = "Buscar produtos por categoria",
+                description = "Retorna todos os produtos da categoria informada.")
+        @ApiResponses({
+                @ApiResponse(responseCode = "200", description = "Produtos retornados com sucesso"),
+                @ApiResponse(responseCode = "204", description = "Não tem produtos cadastrados dessa categoria"),
+                @ApiResponse(responseCode = "400", description = "Categoria inválida"),
+                @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+        })
+        public ResponseEntity<List<ProdutoDTO>> buscarPorCategoria(
+                @Parameter(description = "Nome da categoria (ex: LANCHE, ACOMPANHAMENTO, BEBIDA)",
+                        required = true)
+                @PathVariable String categoria) {
 
-        try {
-            EnumTipoProduto categoriaEnum = EnumTipoProduto.valueOf(categoria.toUpperCase());
-            List<Produto> produtos = service.buscarPorCategoria(categoriaEnum);
+            try {
+                EnumTipoProduto categoriaEnum = EnumTipoProduto.valueOf(categoria.toUpperCase());
+                List<Produto> produtos = service.buscarPorCategoria(categoriaEnum);
 
-            if (produtos == null || produtos.isEmpty()) {
-                return ResponseEntity.noContent().build();
+                if (produtos == null || produtos.isEmpty()) {
+                    return ResponseEntity.noContent().build();
+                }
+
+                List<ProdutoDTO> dtos = produtos.stream()
+                        .map(ProdutoMapper::toDTO)
+                        .collect(Collectors.toList());
+
+                return ResponseEntity.ok(dtos);
+
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().build();
             }
-
-            List<ProdutoDTO> dtos = produtos.stream()
-                    .map(ProdutoMapper::toDTO)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok(dtos);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
         }
-    }
+
+
 }
