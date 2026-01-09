@@ -24,7 +24,7 @@ public class PagamentoStatusService {
             throw new RuntimeException("Pagamento não encontrado");
         }
 
-        if ("PENDENTE".equalsIgnoreCase(pagamento.status())) {
+        if ("APROVADO".equalsIgnoreCase(pagamento.status())) {
             pedidoClient.atualizarStatusPedido(pedidoId);
             return "APROVADO → Pedido alterado para PRONTO";
         }
@@ -39,7 +39,7 @@ public class PagamentoStatusService {
             throw new RuntimeException("Pagamento não encontrado");
         }
 
-        if ("PENDENTE".equalsIgnoreCase(pagamento.status())) {
+        if ("APROVADO".equalsIgnoreCase(pagamento.status())) {
             pedidoClient.atualizarStatusPedidoParaEmPreparacao(pedidoId);
             return "APROVADO → Pedido alterado para EM_PREPARACAO";
         }

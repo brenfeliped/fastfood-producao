@@ -46,29 +46,7 @@ class PagamentoStatusServiceTest {
     }
 
     @Test
-    void processarPagamentoEAtualizarPedido_shouldUpdatePedido_whenStatusIsPendente() {
-        UUID pedidoId = UUID.randomUUID();
-
-        PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
-                UUID.randomUUID(),
-                pedidoId,
-                new BigDecimal("50.00"),
-                "PENDENTE",
-                LocalDateTime.now().minusMinutes(5),
-                LocalDateTime.now()
-        );
-
-        when(pagamentoClient.buscarStatusPagamento(pedidoId)).thenReturn(pagamento);
-
-        String result = service.processarPagamentoEAtualizarPedido(pedidoId);
-
-        assertEquals("APROVADO → Pedido alterado para PRONTO", result);
-        verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
-        verify(pedidoClient, times(1)).atualizarStatusPedido(pedidoId);
-    }
-
-    @Test
-    void processarPagamentoEAtualizarPedido_shouldReturnStatus_whenNotPendente() {
+    void processarPagamentoEAtualizarPedido_shouldUpdatePedido_whenStatusIsAprovado() {
         UUID pedidoId = UUID.randomUUID();
 
         PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
@@ -84,7 +62,29 @@ class PagamentoStatusServiceTest {
 
         String result = service.processarPagamentoEAtualizarPedido(pedidoId);
 
-        assertEquals("APROVADO", result);
+        assertEquals("APROVADO → Pedido alterado para PRONTO", result);
+        verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
+        verify(pedidoClient, times(1)).atualizarStatusPedido(pedidoId);
+    }
+
+    @Test
+    void processarPagamentoEAtualizarPedido_shouldReturnStatus_whenNotAprovado() {
+        UUID pedidoId = UUID.randomUUID();
+
+        PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
+                UUID.randomUUID(),
+                pedidoId,
+                new BigDecimal("50.00"),
+                "PENDENTE",
+                LocalDateTime.now().minusMinutes(5),
+                LocalDateTime.now()
+        );
+
+        when(pagamentoClient.buscarStatusPagamento(pedidoId)).thenReturn(pagamento);
+
+        String result = service.processarPagamentoEAtualizarPedido(pedidoId);
+
+        assertEquals("PENDENTE", result);
         verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
         verifyNoInteractions(pedidoClient);
     }
@@ -103,29 +103,7 @@ class PagamentoStatusServiceTest {
     }
 
     @Test
-    void processarPagamentoEAtualizarPedidoParaEmPreparacao_shouldUpdatePedido_whenStatusIsPendente() {
-        UUID pedidoId = UUID.randomUUID();
-
-        PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
-                UUID.randomUUID(),
-                pedidoId,
-                new BigDecimal("50.00"),
-                "PENDENTE",
-                LocalDateTime.now().minusMinutes(5),
-                LocalDateTime.now()
-        );
-
-        when(pagamentoClient.buscarStatusPagamento(pedidoId)).thenReturn(pagamento);
-
-        String result = service.processarPagamentoEAtualizarPedidoParaEmPreparacao(pedidoId);
-
-        assertEquals("APROVADO → Pedido alterado para EM_PREPARACAO", result);
-        verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
-        verify(pedidoClient, times(1)).atualizarStatusPedidoParaEmPreparacao(pedidoId);
-    }
-
-    @Test
-    void processarPagamentoEAtualizarPedidoParaEmPreparacao_shouldReturnNotChangedMessage_whenNotPendente() {
+    void processarPagamentoEAtualizarPedidoParaEmPreparacao_shouldUpdatePedido_whenStatusIsAprovado() {
         UUID pedidoId = UUID.randomUUID();
 
         PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
@@ -141,7 +119,29 @@ class PagamentoStatusServiceTest {
 
         String result = service.processarPagamentoEAtualizarPedidoParaEmPreparacao(pedidoId);
 
-        assertEquals("Pagamento = APROVADO → Pedido não alterado", result);
+        assertEquals("APROVADO → Pedido alterado para EM_PREPARACAO", result);
+        verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
+        verify(pedidoClient, times(1)).atualizarStatusPedidoParaEmPreparacao(pedidoId);
+    }
+
+    @Test
+    void processarPagamentoEAtualizarPedidoParaEmPreparacao_shouldReturnNotChangedMessage_whenNotAprovado() {
+        UUID pedidoId = UUID.randomUUID();
+
+        PagamentoResponseDTO pagamento = new PagamentoResponseDTO(
+                UUID.randomUUID(),
+                pedidoId,
+                new BigDecimal("50.00"),
+                "PENDENTE",
+                LocalDateTime.now().minusMinutes(5),
+                LocalDateTime.now()
+        );
+
+        when(pagamentoClient.buscarStatusPagamento(pedidoId)).thenReturn(pagamento);
+
+        String result = service.processarPagamentoEAtualizarPedidoParaEmPreparacao(pedidoId);
+
+        assertEquals("Pagamento = PENDENTE → Pedido não alterado", result);
         verify(pagamentoClient, times(1)).buscarStatusPagamento(pedidoId);
         verifyNoInteractions(pedidoClient);
     }
