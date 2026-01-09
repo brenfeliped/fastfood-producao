@@ -1,7 +1,6 @@
+# 🍔 FastFood - Microserviço de Produção
 
-# 🍔 FastFood - Backend
-
-Backend monolítico desenvolvido para o **Desafio SOAT Tech Challenge - Fast Food - Fase 1**, utilizando **Arquitetura Hexagonal** com Java e Spring Boot.
+Microserviço responsável pelo gerenciamento da produção de pedidos, desenvolvido para o **Desafio SOAT Tech Challenge - Fast Food**, utilizando **Arquitetura Hexagonal** com Java e Spring Boot.
 
 ---
 
@@ -9,10 +8,11 @@ Backend monolítico desenvolvido para o **Desafio SOAT Tech Challenge - Fast Foo
 
 - Java 17+
 - Spring Boot 3.x
-- Spring Data JPA
-- PostgreSQL
+- Spring Data MongoDB
+- MongoDB
 - Docker e Docker Compose
 - Swagger (SpringDoc OpenAPI)
+- Cucumber (BDD)
 
 ---
 
@@ -20,20 +20,19 @@ Backend monolítico desenvolvido para o **Desafio SOAT Tech Challenge - Fast Foo
 
 Este projeto segue a **Arquitetura Hexagonal**, organizando as responsabilidades em:
 
-- **Domain:** entidades de negócio e repositórios.
-- **Application:** casos de uso e regras de negócio.
-- **Adapters:** entrada (REST Controllers) e saída (persistência, filas).
-- **Configuration:** mapeamentos e configurações.
+- **Domain:** entidades de negócio e portas (interfaces).
+- **Application:** casos de uso e serviços de domínio.
+- **Adapters:** entrada (REST Controllers) e saída (persistência MongoDB, integrações HTTP).
+- **Configuration:** configurações de segurança, HTTP client, etc.
 
 ---
 
 ## ✅ Funcionalidades
 
-- Cadastro e busca de cliente por CPF
-- CRUD de produtos
-- Busca de produtos por categoria
-- Fake checkout (envio de pedido para fila simulada)
-- Listagem de pedidos
+- Recebimento de pedidos para produção
+- Atualização de status de produção (Recebido, Em Preparação, Pronto, Finalizado)
+- Integração com microserviço de Pedidos para atualização de status
+- Integração com microserviço de Pagamento para verificação de status
 - Documentação automática via Swagger
 
 ---
@@ -48,13 +47,23 @@ Este projeto segue a **Arquitetura Hexagonal**, organizando as responsabilidades
 
 ## ✅ Como executar o projeto
 
-1. Suba a aplicação com Docker Compose:
+1. Suba a aplicação com Docker Compose (na raiz do projeto principal):
 ```bash
 docker-compose up -d --build 
 ```
 
 2. Acesse a aplicação:
 
-- API: [http://localhost:8080](http://localhost:8080/fastfood)
-- Swagger: [http://localhost:8080/fastfood/swagger-ui/index.html](http://localhost:8080/fastfood/swagger-ui.html)
+- API: [http://localhost:8081](http://localhost:8081)
+- Swagger: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 
+---
+
+## ✅ Testes
+
+O projeto conta com testes unitários e testes BDD com Cucumber.
+
+Para executar os testes:
+```bash
+mvn test
+```
