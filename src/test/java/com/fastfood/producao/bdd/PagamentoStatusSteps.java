@@ -44,7 +44,7 @@ public class PagamentoStatusSteps {
                 LocalDateTime.now()
         );
 
-        when(pagamentoClient.buscarStatusPagamento(pedidoId)).thenReturn(pagamento);
+        doReturn(pagamento).when(pagamentoClient).buscarStatusPagamento(pedidoId);
     }
 
     @When("eu processo o pagamento para atualizar o pedido")
